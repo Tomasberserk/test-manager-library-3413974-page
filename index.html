@@ -517,19 +517,17 @@
         <a href="#horarios" class="hover:text-[var(--brass-bright)] transition">Horarios</a>
       </nav>
 
-      <!-- CTA Principal al Sistema (SPA) -->
+      <!-- Botón de consulta al catálogo -->
       <div class="flex items-center gap-3">
         <a 
-          href="http://localhost:5173" 
-          target="_blank" 
-          rel="noopener noreferrer"
+          href="#estanteria" 
           class="btn-brass" 
-          aria-label="Acceder al sistema de gestión operativa Manager Library en localhost 5173"
+          aria-label="Explorar el catálogo de la estantería"
         >
           <svg class="w-4 h-4 icon-btn" width="16" height="16" style="width:16px;height:16px;max-width:16px;max-height:16px;" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
           </svg>
-          <span>Acceso al Sistema</span>
+          <span>Consultar Catálogo</span>
         </a>
       </div>
 
@@ -827,11 +825,11 @@
 
         <div class="text-center md:text-right shrink-0">
           <div class="p-6 bg-[#0c0d12] rounded-xl border border-[#2b2216]">
-            <span class="font-mono text-[11px] text-[var(--brass-dim)] block mb-1">ACCESO OPERATIVO</span>
-            <span class="text-xs text-[var(--text-muted)] block mb-4">¿Eres bibliotecario o admin?</span>
-            <a href="http://localhost:5173" target="_blank" rel="noopener noreferrer" class="btn-brass w-full text-center">
-              Ingresar al Sistema SPA
-            </a>
+            <span class="font-mono text-[11px] text-[var(--brass-dim)] block mb-1">ATENCIÓN AL USUARIO</span>
+            <span class="text-xs text-[var(--text-muted)] block mb-3">Servicio de Consulta y Lectura</span>
+            <div class="text-xs font-mono text-[var(--brass-bright)] bg-[#191510] py-2 px-3 rounded border border-[#382b1d]">
+              Entrada Libre a Sala
+            </div>
           </div>
         </div>
 
@@ -858,8 +856,8 @@
       <div class="flex flex-wrap items-center justify-center gap-6 text-xs font-mono">
         <a href="#estanteria" class="hover:text-[var(--brass-bright)] transition">Estantería</a>
         <a href="#categorias" class="hover:text-[var(--brass-bright)] transition">Categorías</a>
-        <a href="#codice" class="hover:text-[var(--brass-bright)] transition">Códice</a>
-        <a href="http://localhost:5173" target="_blank" rel="noopener noreferrer" class="text-[var(--brass-bright)] hover:underline">SPA Local (5173)</a>
+        <a href="#codice" class="hover:text-[var(--brass-bright)] transition">Códice de Normas</a>
+        <a href="#horarios" class="hover:text-[var(--brass-bright)] transition">Horarios</a>
       </div>
 
       <p class="text-xs text-[#6e6354] text-center sm:text-right font-sans">
@@ -934,12 +932,12 @@
           </p>
         </div>
 
-        <!-- Acceso para préstamos en la SPA -->
+        <!-- Consulta y Préstamo en Sala -->
         <div class="pt-4 border-t border-[#c8b695] flex flex-col sm:flex-row items-center justify-between gap-3">
-          <span class="text-xs text-[#735d44]">Para solicitar este título, ingresa al módulo de circulación:</span>
-          <a href="http://localhost:5173" target="_blank" rel="noopener noreferrer" class="btn-brass text-xs py-2 px-4 whitespace-nowrap">
-            Ir a Préstamos (SPA)
-          </a>
+          <span class="text-xs text-[#735d44]">Para consulta o préstamo, solicítalo en mostrador con el título o ISBN.</span>
+          <span class="font-mono text-xs font-bold text-[#1f150d] bg-[#dfcfb0] px-3 py-1.5 rounded border border-[#baaa8a]">
+            Disponible en Sala
+          </span>
         </div>
 
       </div>
