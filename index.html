@@ -11,6 +11,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+  <!-- Tailwind CSS CDN para el motor de utilidades -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
   <style>
     /* ==========================================================================
        VARIABLES DEL SISTEMA DE DISEÑO — EL ARCHIVO VIVO DEL CONOCIMIENTO
@@ -51,6 +54,25 @@
       margin: 0;
       padding: 0;
     }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* CONTROL ESTRICTO DE SVGS: Evita que cualquier icono se desborde */
+    svg {
+      display: inline-block;
+      vertical-align: middle;
+      flex-shrink: 0;
+      max-width: 100%;
+    }
+    .icon-logo { width: 24px !important; height: 24px !important; max-width: 24px !important; max-height: 24px !important; color: var(--brass) !important; }
+    .icon-btn { width: 16px !important; height: 16px !important; max-width: 16px !important; max-height: 16px !important; }
+    .icon-down { width: 14px !important; height: 14px !important; max-width: 14px !important; max-height: 14px !important; color: var(--brass) !important; }
+    .icon-search { width: 16px !important; height: 16px !important; max-width: 16px !important; max-height: 16px !important; }
+    .icon-empty { width: 40px !important; height: 40px !important; max-width: 40px !important; max-height: 40px !important; color: var(--brass-dim) !important; }
+    .icon-close { width: 20px !important; height: 20px !important; max-width: 20px !important; max-height: 20px !important; }
 
     body {
       background-color: var(--bg-deep);
@@ -476,8 +498,8 @@
       
       <!-- Identidad y Escudo -->
       <a href="#" class="flex items-center gap-3.5 text-decoration-none group" aria-label="Manager Library - Inicio">
-        <div class="w-11 h-11 rounded-lg bg-gradient-to-br from-[#2c1c14] to-[#140b07] border border-[var(--brass)] flex items-center justify-center shadow-lg shadow-black/60 group-hover:border-[var(--brass-bright)] transition">
-          <svg class="w-6 h-6 text-[var(--brass)]" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+        <div class="w-11 h-11 rounded-lg bg-gradient-to-br from-[#2c1c14] to-[#140b07] border border-[var(--brass)] flex items-center justify-center shadow-lg shadow-black/60 group-hover:border-[var(--brass-bright)] transition" style="width:44px;height:44px;">
+          <svg class="w-6 h-6 icon-logo text-[var(--brass)]" width="24" height="24" style="width:24px;height:24px;max-width:24px;max-height:24px;" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
           </svg>
         </div>
@@ -504,7 +526,7 @@
           class="btn-brass" 
           aria-label="Acceder al sistema de gestión operativa Manager Library en localhost 5173"
         >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true">
+          <svg class="w-4 h-4 icon-btn" width="16" height="16" style="width:16px;height:16px;max-width:16px;max-height:16px;" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
           </svg>
           <span>Acceso al Sistema</span>
@@ -546,7 +568,7 @@
         <!-- Botones de Acción -->
         <div class="flex flex-wrap justify-center items-center gap-4">
           <a href="#estanteria" class="btn-brass">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <svg class="w-4 h-4 icon-btn" width="16" height="16" style="width:16px;height:16px;max-width:16px;max-height:16px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
             </svg>
             <span>Explorar la Estantería</span>
@@ -560,7 +582,7 @@
         <!-- Indicador de Descubrimiento -->
         <div class="mt-16 flex items-center justify-center gap-2 text-xs font-mono text-[var(--brass-dim)] uppercase tracking-widest">
           <span>Tira de los lomos para extraer cada volumen</span>
-          <svg class="w-3.5 h-3.5 animate-bounce text-[var(--brass)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <svg class="w-3.5 h-3.5 icon-down animate-bounce text-[var(--brass)]" width="14" height="14" style="width:14px;height:14px;max-width:14px;max-height:14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
           </svg>
         </div>
@@ -649,7 +671,7 @@
               aria-label="Buscar en el catálogo por título, autor o ISBN"
               class="w-full pl-10 pr-4 py-2.5 bg-[#0a0c10] border border-[#2b251d] focus:border-[var(--brass)] rounded-lg text-sm text-[var(--text-main)] placeholder-[#696154] outline-none font-sans transition"
             >
-            <svg class="w-4 h-4 text-[#8a7a63] absolute left-3.5 top-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <svg class="w-4 h-4 icon-search text-[#8a7a63] absolute left-3.5 top-3.5 pointer-events-none" width="16" height="16" style="width:16px;height:16px;max-width:16px;max-height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
             </svg>
           </div>
@@ -690,7 +712,7 @@
 
       <!-- Estado Vacío -->
       <div id="emptyCatalogState" class="hidden text-center py-12 bg-[#12141a] rounded-xl border border-[#2c2217] mt-4">
-        <svg class="w-10 h-10 text-[var(--brass-dim)] mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <svg class="w-10 h-10 icon-empty text-[var(--brass-dim)] mx-auto mb-3" width="40" height="40" style="width:40px;height:40px;max-width:40px;max-height:40px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
         </svg>
         <h3 class="font-display text-lg font-bold text-[var(--parchment)]">No se hallaron volúmenes en este estante</h3>
@@ -880,7 +902,7 @@
           class="p-2 text-[#6b553e] hover:text-[#171106] hover:bg-[#d6c4a3] rounded-md transition"
           aria-label="Cerrar ficha catalográfica"
         >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <svg class="w-5 h-5 icon-close" width="20" height="20" style="width:20px;height:20px;max-width:20px;max-height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
