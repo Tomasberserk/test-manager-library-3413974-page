@@ -1,275 +1,1172 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manager Library · Biblioteca Central ADSO</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Manager Library · El Archivo Vivo del Conocimiento · SENA ADSO 3413974</title>
+  <meta name="description" content="Portal público y catálogo interactivo de Manager Library. Sistema de gestión bibliotecaria desarrollado bajo Spec-Driven Development para la ficha ADSO 3413974 del SENA.">
+
+  <!-- Tipografías Editoriales de Google Fonts con fallbacks robustos -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    .font-serif-title { font-family: 'Playfair Display', serif; }
+    /* ==========================================================================
+       VARIABLES DEL SISTEMA DE DISEÑO — EL ARCHIVO VIVO DEL CONOCIMIENTO
+       ========================================================================== */
+    :root {
+      --bg-deep: #0a0b0e;
+      --bg-surface: #12141a;
+      --bg-card: #181b22;
+      --wood-dark: #19120e;
+      --wood-shelf: #2b1c14;
+      --wood-trim: #422b1f;
+      --brass: #c99b42;
+      --brass-bright: #e7be68;
+      --brass-dim: #8b6823;
+      --brass-glow: rgba(201, 155, 66, 0.18);
+      --emerald: #0f3d2e;
+      --emerald-light: #1b634c;
+      --emerald-accent: #2ecc71;
+      --parchment: #f4eee2;
+      --parchment-soft: #eae2d1;
+      --parchment-card: #dfd4be;
+      --ink: #1c1917;
+      --ink-muted: #57534e;
+      --text-main: #ece6da;
+      --text-muted: #9c9485;
+      --border-brass: rgba(201, 155, 66, 0.25);
+      --border-subtle: rgba(255, 255, 255, 0.07);
+
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-editorial: 'Cormorant Garamond', Garamond, Georgia, serif;
+      --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+    }
+
+    /* Reset y base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-deep);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    ::selection {
+      background: var(--brass);
+      color: var(--bg-deep);
+    }
+
+    /* Clases de tipografía */
+    .font-display { font-family: var(--font-display); }
+    .font-editorial { font-family: var(--font-editorial); }
+    .font-mono { font-family: var(--font-mono); }
+
+    /* Iluminación de biblioteca: haz cenital cálido */
+    .lamp-glow {
+      position: absolute;
+      top: -120px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 750px;
+      height: 480px;
+      background: radial-gradient(ellipse at center, rgba(231, 190, 104, 0.14) 0%, rgba(201, 155, 66, 0.05) 45%, transparent 70%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Textura sutil de pergamino/rejilla de archivo */
+    .library-texture {
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(201, 155, 66, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(10, 11, 14, 0.8), rgba(10, 11, 14, 0.98));
+      background-size: 32px 32px, 100% 100%;
+    }
+
+    /* Placas de latón institucional */
+    .brass-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.9rem;
+      background: linear-gradient(135deg, rgba(201, 155, 66, 0.12), rgba(139, 104, 35, 0.08));
+      border: 1px solid var(--border-brass);
+      border-radius: 4px;
+      color: var(--brass-bright);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Botón Maestro estilo Latón de Archivo */
+    .btn-brass {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      background: linear-gradient(135deg, #dfb45e 0%, #c99b42 60%, #9e7424 100%);
+      color: #171106;
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.02em;
+      padding: 0.75rem 1.6rem;
+      border-radius: 6px;
+      border: 1px solid #f2cf85;
+      box-shadow: 0 4px 18px rgba(201, 155, 66, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn-brass:hover {
+      background: linear-gradient(135deg, #ebd07e 0%, #d8aa4e 60%, #ad822c 100%);
+      box-shadow: 0 6px 24px rgba(201, 155, 66, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+      transform: translateY(-2px);
+    }
+    .btn-brass:focus-visible {
+      outline: 3px solid var(--brass-bright);
+      outline-offset: 3px;
+    }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-main);
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      border: 1px solid var(--border-brass);
+      transition: all 0.2s ease;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn-ghost:hover {
+      background: rgba(201, 155, 66, 0.1);
+      color: var(--brass-bright);
+      border-color: var(--brass);
+      transform: translateY(-2px);
+    }
+    .btn-ghost:focus-visible {
+      outline: 2px solid var(--brass);
+      outline-offset: 3px;
+    }
+
+    /* ==========================================================================
+       LA ESTANTERÍA INTERACTIVA (THE BOOKSHELF EXPERIENCE)
+       ========================================================================== */
+    .bookshelf-unit {
+      background: linear-gradient(180deg, #1f140e 0%, #150d09 100%);
+      border: 2px solid #3d2617;
+      border-radius: 12px;
+      padding: 2.5rem 1.5rem 1.25rem 1.5rem;
+      box-shadow: 
+        0 20px 50px rgba(0, 0, 0, 0.8), 
+        inset 0 1px 0 rgba(201, 155, 66, 0.2),
+        inset 0 10px 30px rgba(0, 0, 0, 0.7);
+      position: relative;
+    }
+
+    .bookshelf-rail {
+      display: flex;
+      align-items: flex-end;
+      gap: 14px;
+      padding: 2rem 1rem 0 1rem;
+      min-height: 330px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: thin;
+      scrollbar-color: var(--brass-dim) #18110b;
+    }
+    .bookshelf-rail::-webkit-scrollbar {
+      height: 8px;
+    }
+    .bookshelf-rail::-webkit-scrollbar-track {
+      background: #150d09;
+      border-radius: 4px;
+    }
+    .bookshelf-rail::-webkit-scrollbar-thumb {
+      background: var(--brass-dim);
+      border-radius: 4px;
+    }
+
+    /* La tabla de madera sobre la que descansan los libros */
+    .bookshelf-wood-board {
+      height: 24px;
+      background: linear-gradient(180deg, #513320 0%, #3a2214 50%, #24140b 100%);
+      border-top: 2px solid #7c5133;
+      border-bottom: 2px solid #140b06;
+      box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.9),
+        inset 0 1px 0 rgba(201, 155, 66, 0.35);
+      position: relative;
+      margin-top: -2px;
+      border-radius: 2px 2px 4px 4px;
+    }
+    .bookshelf-wood-board::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.6), transparent);
+    }
+
+    /* Placa de latón en la repisa */
+    .shelf-brass-plate {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg, #d8ab4b 0%, #9e7526 100%);
+      color: #171106;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 3px 20px;
+      border-radius: 2px;
+      border: 1px solid #f7d27e;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+      z-index: 5;
+    }
+
+    /* ==========================================================================
+       LOMO DE LIBRO INDIVIDUAL (BOOK SPINE)
+       ========================================================================== */
+    .book-spine {
+      flex: 0 0 auto;
+      scroll-snap-align: start;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-radius: 5px 5px 2px 2px;
+      cursor: pointer;
+      user-select: none;
+      padding: 14px 6px 12px 6px;
+      box-shadow: 
+        -3px 0 6px rgba(0, 0, 0, 0.6),
+        4px 0 10px rgba(0, 0, 0, 0.7),
+        inset -2px 0 5px rgba(0, 0, 0, 0.5),
+        inset 2px 0 5px rgba(255, 255, 255, 0.15);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      outline: none;
+    }
+
+    /* Nervios decorativos de encuadernación en relieve */
+    .spine-ribs-top {
+      height: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.3);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.6);
+      margin-bottom: 8px;
+    }
+    .spine-ribs-bottom {
+      height: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.3);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.6);
+      margin-top: 8px;
+    }
+
+    /* Título en el lomo (vertical) */
+    .spine-title-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 6px 0;
+    }
+    .spine-title {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      transform: rotate(180deg);
+      font-family: var(--font-editorial);
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: rgba(255, 255, 255, 0.95);
+      white-space: nowrap;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+      max-height: 180px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Tejuelo / Ficha catalográfica inferior en el lomo */
+    .spine-tag {
+      background: var(--parchment);
+      color: var(--ink);
+      border-radius: 2px;
+      padding: 3px 2px;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      font-weight: 700;
+      line-height: 1.1;
+      border: 1px solid #b8a688;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    }
+
+    /* EFECTO DE EXTRACCIÓN DEL LIBRO (HOVER & FOCUS) */
+    .book-spine:hover,
+    .book-spine:focus-visible {
+      transform: translateY(-24px) scale(1.03) rotate(-1deg);
+      box-shadow: 
+        0 24px 35px rgba(0, 0, 0, 0.8),
+        0 0 25px var(--brass-glow);
+      z-index: 20;
+    }
+    .book-spine:focus-visible {
+      outline: 2px solid var(--brass-bright);
+      outline-offset: 4px;
+    }
+
+    /* Estilos por categoría de lomo */
+    .spine-novela {
+      background: linear-gradient(90deg, #3d1414 0%, #631e1e 40%, #4a1717 100%);
+      border-left: 2px solid #8e2b2b;
+    }
+    .spine-ciencia {
+      background: linear-gradient(90deg, #092c23 0%, #134d3e 40%, #0d382d 100%);
+      border-left: 2px solid #238067;
+    }
+    .spine-tecnologia {
+      background: linear-gradient(90deg, #11203b 0%, #1e3a68 40%, #152747 100%);
+      border-left: 2px solid #2f5a9e;
+    }
+    .spine-historia {
+      background: linear-gradient(90deg, #3d2913 0%, #63431f 40%, #483017 100%);
+      border-left: 2px solid #8c602e;
+    }
+    .spine-infantil {
+      background: linear-gradient(90deg, #3d1838 0%, #63265b 40%, #491c43 100%);
+      border-left: 2px solid #8f3883;
+    }
+
+    /* ==========================================================================
+       MODAL DE FICHA CATALOGRÁFICA
+       ========================================================================== */
+    .catalog-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 6, 8, 0.82);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+      z-index: 999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .catalog-modal-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .catalog-modal-card {
+      background: var(--parchment);
+      color: var(--ink);
+      width: 100%;
+      max-width: 620px;
+      border-radius: 8px;
+      border: 3px solid #3a2717;
+      box-shadow: 
+        0 25px 60px rgba(0, 0, 0, 0.85),
+        0 0 0 1px #d6c6a5,
+        inset 0 0 40px rgba(184, 150, 94, 0.15);
+      position: relative;
+      overflow: hidden;
+      transform: scale(0.95) translateY(10px);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .catalog-modal-backdrop.active .catalog-modal-card {
+      transform: scale(1) translateY(0);
+    }
+
+    /* Marco perimetral tipo ficha de archivo antigua */
+    .catalog-modal-card::before {
+      content: '';
+      position: absolute;
+      inset: 8px;
+      border: 1px dashed #bba98b;
+      pointer-events: none;
+    }
+
+    /* ==========================================================================
+       EL CÓDICE DE NORMAS (SECCIÓN ESTATUTO)
+       ========================================================================== */
+    .codex-rule {
+      position: relative;
+      background: linear-gradient(135deg, rgba(24, 27, 34, 0.8), rgba(18, 20, 26, 0.95));
+      border: 1px solid var(--border-brass);
+      border-radius: 8px;
+      padding: 1.75rem;
+      transition: all 0.25s ease;
+    }
+    .codex-rule:hover {
+      border-color: var(--brass-bright);
+      background: linear-gradient(135deg, rgba(28, 32, 42, 0.9), rgba(20, 23, 30, 0.98));
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    }
+    .codex-numeral {
+      font-family: var(--font-display);
+      font-size: 2.25rem;
+      font-weight: 700;
+      color: var(--brass);
+      line-height: 1;
+      opacity: 0.85;
+    }
+
+    /* ==========================================================================
+       ACCESIBILIDAD Y RESPONSIVE
+       ========================================================================== */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      .book-spine:hover, .book-spine:focus-visible {
+        transform: none !important;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .bookshelf-rail {
+        gap: 10px;
+        padding-top: 1.5rem;
+      }
+      .book-spine {
+        padding: 10px 4px 10px 4px;
+      }
+      .spine-title {
+        font-size: 0.82rem;
+      }
+    }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-900 selection:bg-indigo-500 selection:text-white">
+<body class="library-texture">
 
-  <!-- Navigation -->
-  <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
+  <!-- ==========================================================================
+       1. NAVEGACIÓN PRINCIPAL
+       ========================================================================== -->
+  <header class="sticky top-0 z-40 bg-[#0a0b0e]/90 backdrop-blur-md border-b border-[#2a221a]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-11 h-11 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-bold shadow-lg shadow-indigo-600/30">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+      
+      <!-- Identidad y Escudo -->
+      <a href="#" class="flex items-center gap-3.5 text-decoration-none group" aria-label="Manager Library - Inicio">
+        <div class="w-11 h-11 rounded-lg bg-gradient-to-br from-[#2c1c14] to-[#140b07] border border-[var(--brass)] flex items-center justify-center shadow-lg shadow-black/60 group-hover:border-[var(--brass-bright)] transition">
+          <svg class="w-6 h-6 text-[var(--brass)]" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
           </svg>
         </div>
         <div>
-          <span class="text-xl font-bold tracking-tight text-slate-900 block leading-tight">Manager Library</span>
-          <span class="text-xs font-semibold text-indigo-600 tracking-wider uppercase">Ficha ADSO 3413974</span>
+          <span class="font-display text-xl font-bold tracking-tight text-[var(--text-main)] block leading-tight">Manager Library</span>
+          <span class="font-mono text-[11px] text-[var(--brass)] tracking-widest uppercase block">Archivo Central · ADSO 3413974</span>
         </div>
-      </div>
+      </a>
 
-      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
-        <a href="#catalogo" class="hover:text-indigo-600 transition">Catálogo</a>
-        <a href="#categorias" class="hover:text-indigo-600 transition">Categorías</a>
-        <a href="#reglas" class="hover:text-indigo-600 transition">Normas de Préstamo</a>
-        <a href="#horarios" class="hover:text-indigo-600 transition">Horarios</a>
+      <!-- Menú de Enlaces Internos -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-[var(--text-muted)]" aria-label="Navegación del sitio">
+        <a href="#estanteria" class="hover:text-[var(--brass-bright)] transition">La Estantería</a>
+        <a href="#categorias" class="hover:text-[var(--brass-bright)] transition">Categorías</a>
+        <a href="#codice" class="hover:text-[var(--brass-bright)] transition">Códice de Normas</a>
+        <a href="#horarios" class="hover:text-[var(--brass-bright)] transition">Horarios</a>
       </nav>
 
-      <div>
-        <a href="http://localhost:5173" target="_blank" class="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl font-semibold text-sm shadow-md transition">
-          <span>Acceso Sistema</span>
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+      <!-- CTA Principal al Sistema (SPA) -->
+      <div class="flex items-center gap-3">
+        <a 
+          href="http://localhost:5173" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          class="btn-brass" 
+          aria-label="Acceder al sistema de gestión operativa Manager Library en localhost 5173"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
           </svg>
+          <span>Acceso al Sistema</span>
         </a>
       </div>
+
     </div>
   </header>
 
-  <!-- Hero Section -->
-  <section class="relative overflow-hidden pt-16 pb-24 lg:pt-24 lg:pb-32 bg-gradient-to-b from-white via-slate-50 to-slate-100 border-b border-slate-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-      <div class="max-w-3xl mx-auto text-center">
-        <div class="inline-flex items-center gap-2 bg-indigo-50 border border-indigo-200/60 text-indigo-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-6">
-          <span class="w-2 h-2 rounded-full bg-indigo-600 animate-pulse"></span>
-          Sistema Integral de Gestión Bibliotecaria
+  <main>
+    <!-- ==========================================================================
+         2. HERO CINEMATOGRÁFICO: EL ARCHIVO VIVO DEL CONOCIMIENTO
+         ========================================================================== -->
+    <section class="relative pt-20 pb-28 md:pt-28 md:pb-36 px-4 sm:px-6 lg:px-8 overflow-hidden border-b border-[#231c15]">
+      <!-- Haz de luz de lámpara de banquero -->
+      <div class="lamp-glow" aria-hidden="true"></div>
+
+      <div class="max-w-5xl mx-auto text-center relative z-10">
+        
+        <!-- Insignia Institucional de Latón -->
+        <div class="mb-6 inline-block">
+          <div class="brass-badge">
+            <span class="w-2 h-2 rounded-full bg-[var(--brass-bright)] animate-pulse" aria-hidden="true"></span>
+            <span>Reto SDD · Ficha ADSO 3413974 · SENA</span>
+          </div>
         </div>
-        <h1 class="font-serif-title text-4xl sm:text-6xl font-bold text-slate-900 tracking-tight leading-[1.15]">
-          Un universo de lectura, <br/><span class="text-indigo-600 italic">ordenado con precisión.</span>
+
+        <!-- Titular Editorial Poético y Contundente -->
+        <h1 class="font-display text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-[var(--parchment)] leading-[1.12] mb-6">
+          Cada libro abre un universo.<br>
+          <span class="font-editorial italic font-normal text-[var(--brass-bright)]">Cada consulta, un nuevo comienzo.</span>
         </h1>
-        <p class="mt-6 text-lg sm:text-xl text-slate-600 leading-relaxed">
-          Explora nuestro catálogo de más de 40 títulos seleccionados en literatura, ciencia, historia y tecnología. Préstamos activos regulados bajo arquitectura formal de software.
+
+        <!-- Párrafo Descriptivo Fiel al Proyecto -->
+        <p class="max-w-2xl mx-auto text-base sm:text-lg text-[var(--text-muted)] leading-relaxed mb-10 font-sans">
+          El Archivo Vivo del Conocimiento de la biblioteca. Un catálogo físico clasificado en cinco ramas del saber humano, regulado bajo arquitectura formal de software y estrictas normas de preservación y préstamo.
         </p>
 
-        <div class="mt-10 flex flex-wrap justify-center gap-4">
-          <a href="#catalogo" class="px-7 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold text-sm shadow-lg shadow-indigo-600/25 transition">
-            Explorar Catálogo Destacado
+        <!-- Botones de Acción -->
+        <div class="flex flex-wrap justify-center items-center gap-4">
+          <a href="#estanteria" class="btn-brass">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+            </svg>
+            <span>Explorar la Estantería</span>
           </a>
-          <a href="#reglas" class="px-7 py-3.5 bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 rounded-xl font-semibold text-sm shadow-sm transition">
-            Conocer Reglamento
+
+          <a href="#codice" class="btn-ghost">
+            <span>Consultar Estatuto de Normas</span>
           </a>
         </div>
+
+        <!-- Indicador de Descubrimiento -->
+        <div class="mt-16 flex items-center justify-center gap-2 text-xs font-mono text-[var(--brass-dim)] uppercase tracking-widest">
+          <span>Tira de los lomos para extraer cada volumen</span>
+          <svg class="w-3.5 h-3.5 animate-bounce text-[var(--brass)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+          </svg>
+        </div>
+
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Categorías -->
-  <section id="categorias" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center max-w-2xl mx-auto mb-14">
-      <h2 class="text-xs font-bold uppercase tracking-widest text-indigo-600 mb-2">Clasificación Temática</h2>
-      <h3 class="font-serif-title text-3xl font-bold text-slate-900">Las 5 Categorías Fundamentales</h3>
-      <p class="text-sm text-slate-500 mt-2">Nuestra colección está rigurosamente organizada en cinco ramas del saber.</p>
-    </div>
-
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-      <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-center hover:border-indigo-400 hover:shadow-md transition">
-        <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl mx-auto flex items-center justify-center font-bold text-xl mb-3">📖</div>
-        <h4 class="font-bold text-base text-slate-900">Novela</h4>
-        <p class="text-xs text-slate-500 mt-1">Ficción, clásicos y narrativa universal.</p>
-      </div>
-
-      <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-center hover:border-indigo-400 hover:shadow-md transition">
-        <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl mx-auto flex items-center justify-center font-bold text-xl mb-3">🔬</div>
-        <h4 class="font-bold text-base text-slate-900">Ciencia</h4>
-        <p class="text-xs text-slate-500 mt-1">Física, astronomía y biología.</p>
+    <!-- ==========================================================================
+         3. LAS 5 CATEGORÍAS FUNDAMENTALES (§9 DEL SPEC)
+         ========================================================================== -->
+    <section id="categorias" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-[#231c15]">
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <span class="font-mono text-xs uppercase tracking-widest text-[var(--brass)] mb-2 block">Clasificación Normativa §9</span>
+        <h2 class="font-display text-3xl sm:text-4xl font-bold text-[var(--parchment)]">Cinco Ramas del Saber</h2>
+        <p class="text-sm text-[var(--text-muted)] mt-2">La colección se distribuye en cinco secciones temáticas oficiales de acceso público.</p>
       </div>
 
-      <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-center hover:border-indigo-400 hover:shadow-md transition">
-        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl mx-auto flex items-center justify-center font-bold text-xl mb-3">💻</div>
-        <h4 class="font-bold text-base text-slate-900">Tecnología</h4>
-        <p class="text-xs text-slate-500 mt-1">Ingeniería, software y redes.</p>
-      </div>
+      <!-- Tarjetas de Categoría con Placas -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        
+        <button onclick="filterByCategory('Novela')" class="text-left bg-[#14171f] hover:bg-[#1a1f2c] border border-[#2b251d] hover:border-[var(--brass)] p-5 rounded-lg transition group">
+          <span class="font-mono text-xs text-[var(--brass-dim)] block mb-1">ESTANTE I</span>
+          <h3 class="font-display text-lg font-bold text-[var(--parchment)] group-hover:text-[var(--brass-bright)] transition">Novela</h3>
+          <p class="text-xs text-[var(--text-muted)] mt-1.5 leading-relaxed">Narrativa, ficción, clásicos latinoamericanos y universales.</p>
+        </button>
 
-      <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-center hover:border-indigo-400 hover:shadow-md transition">
-        <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-xl mx-auto flex items-center justify-center font-bold text-xl mb-3">🏛️</div>
-        <h4 class="font-bold text-base text-slate-900">Historia</h4>
-        <p class="text-xs text-slate-500 mt-1">Civilizaciones y memorias del mundo.</p>
-      </div>
+        <button onclick="filterByCategory('Ciencia')" class="text-left bg-[#14171f] hover:bg-[#1a1f2c] border border-[#2b251d] hover:border-[var(--brass)] p-5 rounded-lg transition group">
+          <span class="font-mono text-xs text-[var(--brass-dim)] block mb-1">ESTANTE II</span>
+          <h3 class="font-display text-lg font-bold text-[var(--parchment)] group-hover:text-[var(--brass-bright)] transition">Ciencia</h3>
+          <p class="text-xs text-[var(--text-muted)] mt-1.5 leading-relaxed">Física, cosmología, evolución, biología y método científico.</p>
+        </button>
 
-      <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-center hover:border-indigo-400 hover:shadow-md transition">
-        <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl mx-auto flex items-center justify-center font-bold text-xl mb-3">🎨</div>
-        <h4 class="font-bold text-base text-slate-900">Infantil</h4>
-        <p class="text-xs text-slate-500 mt-1">Cuentos, fábulas y primeros lectores.</p>
-      </div>
-    </div>
-  </section>
+        <button onclick="filterByCategory('Tecnología')" class="text-left bg-[#14171f] hover:bg-[#1a1f2c] border border-[#2b251d] hover:border-[var(--brass)] p-5 rounded-lg transition group">
+          <span class="font-mono text-xs text-[var(--brass-dim)] block mb-1">ESTANTE III</span>
+          <h3 class="font-display text-lg font-bold text-[var(--parchment)] group-hover:text-[var(--brass-bright)] transition">Tecnología</h3>
+          <p class="text-xs text-[var(--text-muted)] mt-1.5 leading-relaxed">Ingeniería de software, algoritmos, arquitectura y redes.</p>
+        </button>
 
-  <!-- Muestra de Catálogo -->
-  <section id="catalogo" class="py-20 bg-slate-100/70 border-y border-slate-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+        <button onclick="filterByCategory('Historia')" class="text-left bg-[#14171f] hover:bg-[#1a1f2c] border border-[#2b251d] hover:border-[var(--brass)] p-5 rounded-lg transition group">
+          <span class="font-mono text-xs text-[var(--brass-dim)] block mb-1">ESTANTE IV</span>
+          <h3 class="font-display text-lg font-bold text-[var(--parchment)] group-hover:text-[var(--brass-bright)] transition">Historia</h3>
+          <p class="text-xs text-[var(--text-muted)] mt-1.5 leading-relaxed">Memorias humanas, imperios, revoluciones y testimonios.</p>
+        </button>
+
+        <button onclick="filterByCategory('Infantil')" class="text-left bg-[#14171f] hover:bg-[#1a1f2c] border border-[#2b251d] hover:border-[var(--brass)] p-5 rounded-lg transition group">
+          <span class="font-mono text-xs text-[var(--brass-dim)] block mb-1">ESTANTE V</span>
+          <h3 class="font-display text-lg font-bold text-[var(--parchment)] group-hover:text-[var(--brass-bright)] transition">Infantil</h3>
+          <p class="text-xs text-[var(--text-muted)] mt-1.5 leading-relaxed">Fábulas formativas, iniciación lectora y cuentos ilustrados.</p>
+        </button>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         4. LA ESTANTERÍA INTERACTIVA (THE BOOKSHELF EXPERIENCE)
+         ========================================================================== -->
+    <section id="estanteria" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-[#231c15]">
+      
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
         <div>
-          <h2 class="text-xs font-bold uppercase tracking-widest text-indigo-600 mb-2">Colección Permanente</h2>
-          <h3 class="font-serif-title text-3xl font-bold text-slate-900">Títulos Más Solicitados</h3>
+          <div class="brass-badge mb-2">Catálogo Físico en Sala</div>
+          <h2 class="font-display text-3xl sm:text-4xl font-bold text-[var(--parchment)]">
+            La Estantería de Volúmenes
+          </h2>
+          <p class="text-sm text-[var(--text-muted)] mt-1">
+            Pasa el cursor o selecciona un lomo para extraer el ejemplar y abrir su ficha técnica.
+          </p>
         </div>
-        <p class="text-sm text-slate-500 mt-2 md:mt-0">Actualizado con el inventario físico de la biblioteca.</p>
+
+        <!-- Contador Accesible -->
+        <div id="resultsCount" class="font-mono text-xs text-[var(--brass-bright)] bg-[#171410] border border-[var(--border-brass)] px-3.5 py-2 rounded-md" aria-live="polite">
+          Mostrando colección completa
+        </div>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <!-- Book 1 -->
-        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-lg transition">
-          <div class="h-48 bg-gradient-to-tr from-amber-600 to-amber-400 rounded-xl mb-4 flex items-center justify-center text-white p-4 shadow-inner text-center font-serif-title text-xl font-bold">
-            Cien años de soledad
+      <!-- Buscador y Filtros Táctiles Instantáneos -->
+      <div class="bg-[#12151c] p-4 sm:p-5 rounded-xl border border-[#2a221a] mb-8 space-y-4 shadow-xl">
+        <div class="flex flex-col sm:flex-row gap-3">
+          
+          <!-- Input de búsqueda -->
+          <div class="relative flex-1">
+            <input 
+              type="text" 
+              id="searchInput"
+              placeholder="Buscar por título, autor o ISBN (ej. Gabriel, 978100...)"
+              aria-label="Buscar en el catálogo por título, autor o ISBN"
+              class="w-full pl-10 pr-4 py-2.5 bg-[#0a0c10] border border-[#2b251d] focus:border-[var(--brass)] rounded-lg text-sm text-[var(--text-main)] placeholder-[#696154] outline-none font-sans transition"
+            >
+            <svg class="w-4 h-4 text-[#8a7a63] absolute left-3.5 top-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+            </svg>
           </div>
-          <span class="text-[11px] font-bold px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded-md">Novela</span>
-          <h4 class="font-bold text-base text-slate-900 mt-2">Cien años de soledad</h4>
-          <p class="text-xs text-slate-500">Gabriel García Márquez</p>
-          <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
-            <span class="font-mono text-slate-400">ISBN: 9780307474728</span>
-            <span class="font-semibold text-emerald-600">En Sala</span>
-          </div>
+
+          <!-- Botón de limpieza -->
+          <button 
+            id="resetFilterBtn" 
+            onclick="resetFilters()"
+            class="px-4 py-2.5 bg-[#1a1e28] hover:bg-[#252b3a] border border-[#332b20] text-xs font-mono text-[var(--text-muted)] hover:text-[var(--brass-bright)] rounded-lg transition"
+          >
+            Restablecer Filtros
+          </button>
         </div>
 
-        <!-- Book 2 -->
-        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-lg transition">
-          <div class="h-48 bg-gradient-to-tr from-blue-700 to-cyan-500 rounded-xl mb-4 flex items-center justify-center text-white p-4 shadow-inner text-center font-serif-title text-xl font-bold">
-            Cosmos
-          </div>
-          <span class="text-[11px] font-bold px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-md">Ciencia</span>
-          <h4 class="font-bold text-base text-slate-900 mt-2">Cosmos</h4>
-          <p class="text-xs text-slate-500">Carl Sagan</p>
-          <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
-            <span class="font-mono text-slate-400">ISBN: 9788408053804</span>
-            <span class="font-semibold text-emerald-600">En Sala</span>
-          </div>
-        </div>
-
-        <!-- Book 3 -->
-        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-lg transition">
-          <div class="h-48 bg-gradient-to-tr from-slate-800 to-indigo-900 rounded-xl mb-4 flex items-center justify-center text-white p-4 shadow-inner text-center font-serif-title text-xl font-bold">
-            Clean Code
-          </div>
-          <span class="text-[11px] font-bold px-2 py-0.5 bg-blue-50 text-blue-700 rounded-md">Tecnología</span>
-          <h4 class="font-bold text-base text-slate-900 mt-2">Código Limpio</h4>
-          <p class="text-xs text-slate-500">Robert C. Martin</p>
-          <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
-            <span class="font-mono text-slate-400">ISBN: 9780132350884</span>
-            <span class="font-semibold text-emerald-600">En Sala</span>
-          </div>
-        </div>
-
-        <!-- Book 4 -->
-        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-lg transition">
-          <div class="h-48 bg-gradient-to-tr from-rose-700 to-amber-600 rounded-xl mb-4 flex items-center justify-center text-white p-4 shadow-inner text-center font-serif-title text-xl font-bold">
-            Sapiens
-          </div>
-          <span class="text-[11px] font-bold px-2 py-0.5 bg-rose-50 text-rose-700 rounded-md">Historia</span>
-          <h4 class="font-bold text-base text-slate-900 mt-2">Sapiens: De animales a dioses</h4>
-          <p class="text-xs text-slate-500">Yuval Noah Harari</p>
-          <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
-            <span class="font-mono text-slate-400">ISBN: 9788499926223</span>
-            <span class="font-semibold text-emerald-600">En Sala</span>
-          </div>
+        <!-- Filtros por categoría en píldoras estilo placa -->
+        <div class="flex flex-wrap gap-2 pt-2 border-t border-[#1e1a15]" role="group" aria-label="Filtrar por estante temático">
+          <button onclick="filterByCategory('all')" class="cat-pill active text-xs font-mono px-3 py-1.5 rounded bg-[var(--brass)] text-[#171106] font-bold transition" data-cat="all">Todos los Estantes</button>
+          <button onclick="filterByCategory('Novela')" class="cat-pill text-xs font-mono px-3 py-1.5 rounded bg-[#181a22] text-[var(--text-muted)] hover:text-white border border-[#2a2318] transition" data-cat="Novela">Novela</button>
+          <button onclick="filterByCategory('Ciencia')" class="cat-pill text-xs font-mono px-3 py-1.5 rounded bg-[#181a22] text-[var(--text-muted)] hover:text-white border border-[#2a2318] transition" data-cat="Ciencia">Ciencia</button>
+          <button onclick="filterByCategory('Tecnología')" class="cat-pill text-xs font-mono px-3 py-1.5 rounded bg-[#181a22] text-[var(--text-muted)] hover:text-white border border-[#2a2318] transition" data-cat="Tecnología">Tecnología</button>
+          <button onclick="filterByCategory('Historia')" class="cat-pill text-xs font-mono px-3 py-1.5 rounded bg-[#181a22] text-[var(--text-muted)] hover:text-white border border-[#2a2318] transition" data-cat="Historia">Historia</button>
+          <button onclick="filterByCategory('Infantil')" class="cat-pill text-xs font-mono px-3 py-1.5 rounded bg-[#181a22] text-[var(--text-muted)] hover:text-white border border-[#2a2318] transition" data-cat="Infantil">Infantil</button>
         </div>
       </div>
+
+      <!-- Mueble de Estantería Física -->
+      <div class="bookshelf-unit">
+        <div class="shelf-brass-plate">ESTANTERÍA PRINCIPAL · SALA DE CONSULTA</div>
+        
+        <!-- Carril de Lomos de Libros -->
+        <div id="bookshelfRail" class="bookshelf-rail" role="region" aria-label="Lomos de libros de la estantería">
+          <!-- Renderizado dinámico vía JavaScript local -->
+        </div>
+
+        <!-- Repisa de Madera Maciza con Sombra -->
+        <div class="bookshelf-wood-board"></div>
+      </div>
+
+      <!-- Estado Vacío -->
+      <div id="emptyCatalogState" class="hidden text-center py-12 bg-[#12141a] rounded-xl border border-[#2c2217] mt-4">
+        <svg class="w-10 h-10 text-[var(--brass-dim)] mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+        </svg>
+        <h3 class="font-display text-lg font-bold text-[var(--parchment)]">No se hallaron volúmenes en este estante</h3>
+        <p class="text-xs text-[var(--text-muted)] mt-1">Verifica el término de búsqueda o selecciona otra categoría.</p>
+        <button onclick="resetFilters()" class="btn-ghost mt-4 text-xs py-2 px-4">Ver Colección Completa</button>
+      </div>
+
+    </section>
+
+    <!-- ==========================================================================
+         5. EL CÓDICE DE NORMAS (REGISTRO NORMATIVO DE PRÉSTAMO)
+         ========================================================================== -->
+    <section id="codice" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-[#231c15]">
+      <div class="max-w-3xl mx-auto text-center mb-14">
+        <span class="font-mono text-xs uppercase tracking-widest text-[var(--brass)] mb-2 block">Estatuto de Circulación</span>
+        <h2 class="font-display text-3xl sm:text-5xl font-bold text-[var(--parchment)]">El Códice de Normas</h2>
+        <p class="text-sm text-[var(--text-muted)] mt-3">
+          Reglas inmutables de preservación y rotación comunitaria de libros, implementadas bajo lógica formal de servidor.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        
+        <!-- Norma I -->
+        <article class="codex-rule">
+          <div class="flex items-start gap-4">
+            <span class="codex-numeral" aria-hidden="true">I</span>
+            <div>
+              <h3 class="font-display text-xl font-bold text-[var(--parchment)]">Límite de Préstamo</h3>
+              <p class="text-xs font-mono text-[var(--brass)] mt-0.5">Máximo 3 Ejemplares Simultáneos</p>
+              <p class="text-sm text-[var(--text-muted)] mt-2 leading-relaxed">
+                Ningún socio registrado puede mantener en su custodia más de 3 libros sin devolver. La política protege la disponibilidad democrática de los títulos para toda la comunidad académica.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Norma II -->
+        <article class="codex-rule">
+          <div class="flex items-start gap-4">
+            <span class="codex-numeral" aria-hidden="true">II</span>
+            <div>
+              <h3 class="font-display text-xl font-bold text-[var(--parchment)]">Plazo de Custodia</h3>
+              <p class="text-xs font-mono text-[var(--brass)] mt-0.5">14 Días Calendario Improrrogables</p>
+              <p class="text-sm text-[var(--text-muted)] mt-2 leading-relaxed">
+                Todo préstamo posee una vigencia exacta de dos semanas a partir de su registro. Las fechas se calculan y auditan en tiempo estándar UTC sin admitir prórrogas tácitas.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Norma III -->
+        <article class="codex-rule">
+          <div class="flex items-start gap-4">
+            <span class="codex-numeral" aria-hidden="true">III</span>
+            <div>
+              <h3 class="font-display text-xl font-bold text-[var(--parchment)]">Prevención de Mora</h3>
+              <p class="text-xs font-mono text-[var(--brass)] mt-0.5">Bloqueo Preventivo Automático</p>
+              <p class="text-sm text-[var(--text-muted)] mt-2 leading-relaxed">
+                Si un socio acumula un libro con plazo vencido sin restituir, el sistema restringe de inmediato cualquier nuevo préstamo hasta que regularice la entrega en sala.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Norma IV -->
+        <article class="codex-rule">
+          <div class="flex items-start gap-4">
+            <span class="codex-numeral" aria-hidden="true">IV</span>
+            <div>
+              <h3 class="font-display text-xl font-bold text-[var(--parchment)]">Devolución Individual</h3>
+              <p class="text-xs font-mono text-[var(--brass)] mt-0.5">Restitución Línea por Línea</p>
+              <p class="text-sm text-[var(--text-muted)] mt-2 leading-relaxed">
+                Cada volumen se entrega y procesa de manera individual y atómica. La recepción de un libro restaura su disponibilidad de inmediato para otros lectores, sin requerir cerrar el préstamo entero.
+              </p>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         6. HORARIOS DE ATENCIÓN Y SALA
+         ========================================================================== -->
+    <section id="horarios" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-4xl mx-auto bg-gradient-to-br from-[#16130f] to-[#0d0f14] p-8 sm:p-10 rounded-2xl border border-[var(--border-brass)] shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8">
+        
+        <div>
+          <span class="font-mono text-xs text-[var(--brass)] uppercase tracking-wider block mb-1">Horario y Sede Oficial</span>
+          <h2 class="font-display text-2xl sm:text-3xl font-bold text-[var(--parchment)]">Sala de Lectura y Préstamos</h2>
+          <p class="text-sm text-[var(--text-muted)] mt-2 max-w-md leading-relaxed">
+            Abierto para aprendices, instructores y personal autorizado del Centro de Formación SENA.
+          </p>
+
+          <div class="mt-6 space-y-2 text-sm">
+            <div class="flex items-center gap-3">
+              <span class="w-2 h-2 rounded-full bg-[var(--emerald-accent)]"></span>
+              <span class="text-[var(--text-main)] font-semibold">Lunes a Viernes:</span>
+              <span class="text-[var(--text-muted)]">8:00 a. m. – 6:00 p. m.</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="w-2 h-2 rounded-full bg-[var(--emerald-accent)]"></span>
+              <span class="text-[var(--text-main)] font-semibold">Sábados:</span>
+              <span class="text-[var(--text-muted)]">9:00 a. m. – 1:00 p. m.</span>
+            </div>
+            <div class="flex items-center gap-3 text-xs text-[#8c7f6f] pt-1">
+              <span>Domingos y Feriados: Cerrado por mantenimiento de colecciones.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center md:text-right shrink-0">
+          <div class="p-6 bg-[#0c0d12] rounded-xl border border-[#2b2216]">
+            <span class="font-mono text-[11px] text-[var(--brass-dim)] block mb-1">ACCESO OPERATIVO</span>
+            <span class="text-xs text-[var(--text-muted)] block mb-4">¿Eres bibliotecario o admin?</span>
+            <a href="http://localhost:5173" target="_blank" rel="noopener noreferrer" class="btn-brass w-full text-center">
+              Ingresar al Sistema SPA
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================================================
+       7. PIE DE PÁGINA INSTITUCIONAL (ADSO 3413974 · SENA)
+       ========================================================================== -->
+  <footer class="bg-[#07080b] border-t border-[#1f1913] py-12 text-sm text-[var(--text-muted)]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+      
+      <div class="flex items-center gap-3">
+        <div class="w-7 h-7 rounded bg-[var(--brass-dim)]/20 border border-[var(--brass)] flex items-center justify-center text-[var(--brass)] font-bold text-xs">
+          ML
+        </div>
+        <div>
+          <span class="font-display font-bold text-white block">Manager Library</span>
+          <span class="text-xs text-[#857969]">Ficha ADSO 3413974 · SENA Centro de Formación</span>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-center gap-6 text-xs font-mono">
+        <a href="#estanteria" class="hover:text-[var(--brass-bright)] transition">Estantería</a>
+        <a href="#categorias" class="hover:text-[var(--brass-bright)] transition">Categorías</a>
+        <a href="#codice" class="hover:text-[var(--brass-bright)] transition">Códice</a>
+        <a href="http://localhost:5173" target="_blank" rel="noopener noreferrer" class="text-[var(--brass-bright)] hover:underline">SPA Local (5173)</a>
+      </div>
+
+      <p class="text-xs text-[#6e6354] text-center sm:text-right font-sans">
+        Construido bajo Spec-Driven Development (SDD).<br>Desacoplado de la API según Norma T-23.
+      </p>
+
     </div>
-  </section>
-
-  <!-- Normas de Préstamo -->
-  <section id="reglas" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="max-w-3xl mx-auto">
-      <div class="text-center mb-12">
-        <h2 class="text-xs font-bold uppercase tracking-widest text-indigo-600 mb-2">Normativa Oficial</h2>
-        <h3 class="font-serif-title text-3xl font-bold text-slate-900">Reglamento de Préstamo</h3>
-        <p class="text-sm text-slate-500 mt-2">Garantizamos el acceso democrático y la rotación continua de los ejemplares.</p>
-      </div>
-
-      <div class="space-y-4">
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-start gap-4">
-          <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center font-bold text-sm shrink-0">
-            01
-          </div>
-          <div>
-            <h4 class="font-bold text-slate-900 text-base">Plazo Máximo de 14 Días Calendario</h4>
-            <p class="text-sm text-slate-600 mt-1">
-              Todo libro prestado debe ser devuelto en un lapso improrrogable de 14 días. Las fechas se calculan y auditan en UTC.
-            </p>
-          </div>
-        </div>
-
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-start gap-4">
-          <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center font-bold text-sm shrink-0">
-            02
-          </div>
-          <div>
-            <h4 class="font-bold text-slate-900 text-base">Límite de 3 Ejemplares Simultáneos</h4>
-            <p class="text-sm text-slate-600 mt-1">
-              Ningún socio puede poseer más de tres (3) libros activos sin devolver. Las solicitudes que excedan el límite son rechazadas automáticamente.
-            </p>
-          </div>
-        </div>
-
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-start gap-4">
-          <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center font-bold text-sm shrink-0">
-            03
-          </div>
-          <div>
-            <h4 class="font-bold text-slate-900 text-base">Bloqueo Preventivo por Vencimiento</h4>
-            <p class="text-sm text-slate-600 mt-1">
-              Si un socio tiene al menos un ejemplar vencido, el sistema bloquea cualquier nuevo préstamo hasta que se regularice la entrega.
-            </p>
-          </div>
-        </div>
-
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-start gap-4">
-          <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center font-bold text-sm shrink-0">
-            04
-          </div>
-          <div>
-            <h4 class="font-bold text-slate-900 text-base">Devolución Línea por Línea</h4>
-            <p class="text-sm text-slate-600 mt-1">
-              Los libros pueden devolverse de forma individual. Cada devolución incrementa de inmediato el stock disponible para otros lectores.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Horarios y Ubicación -->
-  <section id="horarios" class="py-16 bg-slate-900 text-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
-      <div>
-        <h4 class="font-bold text-lg text-white mb-2">Horarios de Atención</h4>
-        <p class="text-slate-400 text-sm">Lunes a Viernes: 8:00 a. m. – 6:00 p. m.<br/>Sábados: 9:00 a. m. – 1:00 p. m.</p>
-      </div>
-      <div>
-        <h4 class="font-bold text-lg text-white mb-2">Ubicación</h4>
-        <p class="text-slate-400 text-sm">Centro de Formación SENA<br/>Ambiente de Software ADSO 3413974</p>
-      </div>
-      <div>
-        <h4 class="font-bold text-lg text-white mb-2">Especificación Técnica</h4>
-        <p class="text-slate-400 text-sm">Diseñado bajo principios SDD (Spec-Driven Development) con API REST en Laravel y frontend en React.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="py-6 bg-slate-950 text-slate-500 text-xs text-center border-t border-slate-800">
-    <p>© 2026 Manager Library · Prueba Técnica SDD · Ficha ADSO 3413974 · Todos los derechos reservados.</p>
   </footer>
+
+  <!-- ==========================================================================
+       8. MODAL DE FICHA CATALOGRÁFICA ACCESIBLE
+       ========================================================================== -->
+  <div 
+    id="bookModal" 
+    class="catalog-modal-backdrop" 
+    role="dialog" 
+    aria-modal="true" 
+    aria-labelledby="modalTitle" 
+    aria-describedby="modalAuthor"
+  >
+    <div class="catalog-modal-card p-6 sm:p-8" onclick="event.stopPropagation()">
+      
+      <!-- Encabezado de la Ficha -->
+      <div class="flex items-start justify-between border-b border-[#c8b695] pb-4 mb-5">
+        <div>
+          <span id="modalCategory" class="font-mono text-xs font-bold uppercase tracking-wider text-[#7c511f]">
+            Categoría
+          </span>
+          <h3 id="modalTitle" class="font-display text-2xl sm:text-3xl font-bold text-[#1a140f] leading-tight mt-1">
+            Título del Libro
+          </h3>
+          <p id="modalAuthor" class="font-editorial text-lg italic text-[#54412f] mt-0.5">
+            Autor
+          </p>
+        </div>
+
+        <!-- Botón de Cierre -->
+        <button 
+          onclick="closeModal()" 
+          class="p-2 text-[#6b553e] hover:text-[#171106] hover:bg-[#d6c4a3] rounded-md transition"
+          aria-label="Cerrar ficha catalográfica"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Cuerpo de la Ficha -->
+      <div class="space-y-4 text-sm font-sans">
+        
+        <!-- Ficha técnica con ISBN -->
+        <div class="grid grid-cols-2 gap-3 bg-[#e8deca] p-3 rounded border border-[#cbba98]">
+          <div>
+            <span class="block text-[11px] font-mono uppercase text-[#735d44]">Identificador ISBN-13</span>
+            <span id="modalIsbn" class="font-mono text-xs font-bold text-[#23170e]">9781000000000</span>
+          </div>
+          <div>
+            <span class="block text-[11px] font-mono uppercase text-[#735d44]">Disponibilidad en Sala</span>
+            <span id="modalAvailability" class="inline-flex items-center gap-1.5 font-bold text-xs text-[#0e5c3e]">
+              <span class="w-2 h-2 rounded-full bg-[#1da06d]"></span>
+              En Colección
+            </span>
+          </div>
+        </div>
+
+        <!-- Sinopsis o Reseña del Volumen -->
+        <div>
+          <span class="block text-xs font-mono uppercase tracking-wider text-[#735d44] mb-1">Nota Editorial del Archivo</span>
+          <p id="modalDescription" class="text-xs sm:text-sm text-[#3b3228] leading-relaxed">
+            Descripción del volumen.
+          </p>
+        </div>
+
+        <!-- Acceso para préstamos en la SPA -->
+        <div class="pt-4 border-t border-[#c8b695] flex flex-col sm:flex-row items-center justify-between gap-3">
+          <span class="text-xs text-[#735d44]">Para solicitar este título, ingresa al módulo de circulación:</span>
+          <a href="http://localhost:5173" target="_blank" rel="noopener noreferrer" class="btn-brass text-xs py-2 px-4 whitespace-nowrap">
+            Ir a Préstamos (SPA)
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       9. DATOS LOCALES Y LÓGICA DE INTERACCIÓN (VANILLA JAVASCRIPT SEGURO)
+       ========================================================================== -->
+  <script>
+    /**
+     * CATÁLOGO LOCAL DE 40 VOLÚMENES OFICIALES
+     * Corresponde con exactitud al inventario sembrado del proyecto (§9 del Spec).
+     */
+    const CATALOG = [
+      // 1. NOVELA (8 libros)
+      { id: 'nov-01', title: 'Cien años de soledad', author: 'Gabriel García Márquez', category: 'Novela', isbn: '9781000000001', width: 46, height: 275, desc: 'Obra cumbre del realismo mágico sobre la saga de la familia Buendía en el mítico pueblo de Macondo.' },
+      { id: 'nov-02', title: 'Don Quijote de la Mancha', author: 'Miguel de Cervantes', category: 'Novela', isbn: '9781000000002', width: 52, height: 280, desc: 'La gran sátira caballeresca que fundó las bases de la novela moderna y la libertad del espíritu.' },
+      { id: 'nov-03', title: 'El amor en los tiempos del cólera', author: 'Gabriel García Márquez', category: 'Novela', isbn: '9781000000003', width: 44, height: 268, desc: 'Crónica sentimental que desafía el paso del tiempo y las convenciones a lo largo de más de cincuenta años.' },
+      { id: 'nov-04', title: 'La ciudad y los perros', author: 'Mario Vargas Llosa', category: 'Novela', isbn: '9781000000004', width: 40, height: 260, desc: 'Retrato crudo de la disciplina militar y los códigos juveniles en el Colegio Militar Leoncio Prado.' },
+      { id: 'nov-05', title: 'Rayuela', author: 'Julio Cortázar', category: 'Novela', isbn: '9781000000005', width: 45, height: 272, desc: 'Antinovela lúdica y laberíntica que propone múltiples recorridos de lectura entre París y Buenos Aires.' },
+      { id: 'nov-06', title: 'Ficciones', author: 'Jorge Luis Borges', category: 'Novela', isbn: '9781000000006', width: 38, height: 255, desc: 'Cuentos filosóficos sobre laberintos, bibliotecas infinitas, espejos y paradojas temporales.' },
+      { id: 'nov-07', title: 'Pedro Páramo', author: 'Juan Rulfo', category: 'Novela', isbn: '9781000000007', width: 36, height: 250, desc: 'Viaje fantasmal a Comala en busca del padre ausente, entre murmullos y ánimas del campo mexicano.' },
+      { id: 'nov-08', title: 'Ensayo sobre la ceguera', author: 'José Saramago', category: 'Novela', isbn: '9781000000008', width: 43, height: 265, desc: 'Alegoría devastadora sobre una epidemia de ceguera blanca y la pérdida de la dignidad humana.' },
+
+      // 2. CIENCIA (8 libros)
+      { id: 'cie-01', title: 'Cosmos', author: 'Carl Sagan', category: 'Ciencia', isbn: '9781000000009', width: 48, height: 275, desc: 'Un viaje poético y riguroso por quince mil millones de años de evolución cósmica y el destino humano.' },
+      { id: 'cie-02', title: 'Breve historia del tiempo', author: 'Stephen Hawking', category: 'Ciencia', isbn: '9781000000010', width: 42, height: 265, desc: 'Explicación magistral sobre agujeros negros, la teoría de la relatividad y el origen del universo.' },
+      { id: 'cie-03', title: 'El origen de las especies', author: 'Charles Darwin', category: 'Ciencia', isbn: '9781000000011', width: 50, height: 278, desc: 'Tratado fundacional de la biología moderna mediante el principio de selección natural.' },
+      { id: 'cie-04', title: 'El gen egoísta', author: 'Richard Dawkins', category: 'Ciencia', isbn: '9781000000012', width: 44, height: 268, desc: 'Revolucionaria perspectiva genética sobre el comportamiento biológico y la transmisión cultural.' },
+      { id: 'cie-05', title: 'El universo elegante', author: 'Brian Greene', category: 'Ciencia', isbn: '9781000000013', width: 45, height: 270, desc: 'Supercuerdas, dimensiones ocultas y la emocionante búsqueda de la teoría unificada del todo.' },
+      { id: 'cie-06', title: 'Astros, átomos y hombres', author: 'Carl Sagan', category: 'Ciencia', isbn: '9781000000014', width: 40, height: 260, desc: 'Ensayos lúcidos sobre el método científico y nuestro lugar en la inmensidad del espacio interestelar.' },
+      { id: 'cie-07', title: 'La física de lo imposible', author: 'Michio Kaku', category: 'Ciencia', isbn: '9781000000015', width: 43, height: 266, desc: 'Análisis de teletransportación, campos de fuerza y viajes temporales a la luz de la física cuántica.' },
+      { id: 'cie-08', title: 'Una breve historia de casi todo', author: 'Bill Bryson', category: 'Ciencia', isbn: '9781000000016', width: 47, height: 274, desc: 'Fascinante recorrido por la geología, la química y la astronomía narrado con exquisito ingenio.' },
+
+      // 3. TECNOLOGÍA (8 libros)
+      { id: 'tec-01', title: 'Código Limpio (Clean Code)', author: 'Robert C. Martin', category: 'Tecnología', isbn: '9781000000017', width: 46, height: 272, desc: 'Manual de estilo, artesanía y buenas prácticas para escribir código legible, testeable y mantenible.' },
+      { id: 'tec-02', title: 'El programador pragmático', author: 'Andrew Hunt & David Thomas', category: 'Tecnología', isbn: '9781000000018', width: 44, height: 265, desc: 'Guía esencial sobre disciplina profesional, arquitectura modular, automatización y maestría técnica.' },
+      { id: 'tec-03', title: 'Patrones de Diseño (GoF)', author: 'Erich Gamma et al.', category: 'Tecnología', isbn: '9781000000019', width: 48, height: 276, desc: 'Catálogo clásico de 23 patrones de arquitectura orientada a objetos para resolver problemas recurrentes.' },
+      { id: 'tec-04', title: 'Arquitectura Limpia', author: 'Robert C. Martin', category: 'Tecnología', isbn: '9781000000020', width: 44, height: 268, desc: 'Estructuración de software desacoplado de frameworks, bases de datos e interfaces de usuario.' },
+      { id: 'tec-05', title: 'Refactorización', author: 'Martin Fowler', category: 'Tecnología', isbn: '9781000000021', width: 46, height: 270, desc: 'Técnicas sistemáticas para mejorar el diseño interno de código existente sin alterar su comportamiento externo.' },
+      { id: 'tec-06', title: 'Diseño Guiado por el Dominio', author: 'Eric Evans', category: 'Tecnología', isbn: '9781000000022', width: 50, height: 278, desc: 'Unificación del modelo conceptual con la implementación de software a través del lenguaje ubicuo.' },
+      { id: 'tec-07', title: 'Introducción a los Algoritmos', author: 'Thomas Cormen et al.', category: 'Tecnología', isbn: '9781000000023', width: 54, height: 282, desc: 'El texto de referencia global en análisis de complejidad, estructuras de datos y algoritmos avanzados.' },
+      { id: 'tec-08', title: 'Redes de Computadoras', author: 'Andrew S. Tanenbaum', category: 'Tecnología', isbn: '9781000000024', width: 48, height: 274, desc: 'Fundamentos de protocolos, capas OSI/TCP, transmisión física y arquitecturas de red distribuida.' },
+
+      // 4. HISTORIA (8 libros)
+      { id: 'his-01', title: 'Sapiens: De animales a dioses', author: 'Yuval Noah Harari', category: 'Historia', isbn: '9781000000025', width: 46, height: 274, desc: 'Breve historia de la humanidad desde la revolución cognitiva hasta los albores de la era biotecnológica.' },
+      { id: 'his-02', title: 'Homo Deus', author: 'Yuval Noah Harari', category: 'Historia', isbn: '9781000000026', width: 44, height: 268, desc: 'Prospección filosófica sobre el futuro de la especie humana frente a los datos y la inteligencia artificial.' },
+      { id: 'his-03', title: 'Armas, gérmenes y acero', author: 'Jared Diamond', category: 'Historia', isbn: '9781000000027', width: 47, height: 272, desc: 'Explicación biogeográfica de por qué algunas civilizaciones prosperaron y conquistaron a otras.' },
+      { id: 'his-04', title: 'La Segunda Guerra Mundial', author: 'Antony Beevor', category: 'Historia', isbn: '9781000000028', width: 52, height: 280, desc: 'Monografía exhaustiva del conflicto bélico más mortífero de la historia con testimonios en el frente.' },
+      { id: 'his-05', title: 'El Imperio Romano', author: 'Isaac Asimov', category: 'Historia', isbn: '9781000000029', width: 42, height: 262, desc: 'Crónica accesible de la ascensión, la pax romana y la posterior caída del mayor imperio de la antigüedad.' },
+      { id: 'his-06', title: 'Historia de dos ciudades', author: 'Charles Dickens', category: 'Historia', isbn: '9781000000030', width: 41, height: 264, desc: 'Retrato de Londres y París durante la tormenta y el terror social de la Revolución Francesa.' },
+      { id: 'his-07', title: 'Breve historia de Colombia', author: 'Jorge Orlando Melo', category: 'Historia', isbn: '9781000000031', width: 43, height: 266, desc: 'Síntesis lúcida de las transformaciones sociales, políticas y culturales del territorio colombiano.' },
+      { id: 'his-08', title: 'Las venas abiertas de América Latina', author: 'Eduardo Galeano', category: 'Historia', isbn: '9781000000032', width: 45, height: 270, desc: 'Ensayo histórico sobre cinco siglos de saqueo de recursos y resistencias en el continente mestizo.' },
+
+      // 5. INFANTIL (8 libros)
+      { id: 'inf-01', title: 'El Principito', author: 'Antoine de Saint-Exupéry', category: 'Infantil', isbn: '9781000000033', width: 38, height: 254, desc: 'Fábula poética sobre la amistad, la responsabilidad y lo que es invisible a los ojos.' },
+      { id: 'inf-02', title: 'Donde viven los monstruos', author: 'Maurice Sendak', category: 'Infantil', isbn: '9781000000034', width: 40, height: 258, desc: 'El viaje imaginario de Max al reino de sus emociones desbordadas y el valor del hogar.' },
+      { id: 'inf-03', title: 'Matilda', author: 'Roald Dahl', category: 'Infantil', isbn: '9781000000035', width: 42, height: 262, desc: 'La historia de una niña superdotada y su apasionado amor por los libros frente a la adversidad.' },
+      { id: 'inf-04', title: 'Charlie y la fábrica de chocolate', author: 'Roald Dahl', category: 'Infantil', isbn: '9781000000036', width: 41, height: 260, desc: 'Una aventura mágica en el fantástico imperio dulce de Willy Wonka guiada por la nobleza.' },
+      { id: 'inf-05', title: 'Alicia en el país de las maravillas', author: 'Lewis Carroll', category: 'Infantil', isbn: '9781000000037', width: 43, height: 264, desc: 'El salto al madriguera hacia un mundo de paradojas lógicas, conejos blancos y juegos de palabras.' },
+      { id: 'inf-06', title: 'Las crónicas de Narnia: El león', author: 'C.S. Lewis', category: 'Infantil', isbn: '9781000000038', width: 44, height: 268, desc: 'Cuatro hermanos descubren un ropero que conduce a un reino invernal bajo el hechizo de la bruja blanca.' },
+      { id: 'inf-07', title: 'Peter Pan', author: 'J.M. Barrie', category: 'Infantil', isbn: '9781000000039', width: 39, height: 256, desc: 'El niño que se niega a crecer y viaja a la isla de Nunca Jamás junto a Wendy y Campanita.' },
+      { id: 'inf-08', title: 'Cuentos de la selva', author: 'Horacio Quiroga', category: 'Infantil', isbn: '9781000000040', width: 40, height: 258, desc: 'Fábulas de animales en la espesura del Chaco misionero sobre solidaridad y convivencia natural.' }
+    ];
+
+    // Variables de estado local en cliente
+    let currentCategory = 'all';
+    let searchQuery = '';
+
+    // Normalizador de texto para búsquedas insensibles a tildes
+    function normalizeText(text) {
+      return (text || '')
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .trim();
+    }
+
+    // Renderizar lomos en la estantería
+    function renderBookshelf() {
+      const rail = document.getElementById('bookshelfRail');
+      const emptyState = document.getElementById('emptyCatalogState');
+      const countEl = document.getElementById('resultsCount');
+
+      const normQuery = normalizeText(searchQuery);
+
+      const filtered = CATALOG.filter(book => {
+        const matchesCategory = currentCategory === 'all' || book.category === currentCategory;
+        if (!matchesCategory) return false;
+
+        if (!normQuery) return true;
+
+        const matchTitle = normalizeText(book.title).includes(normQuery);
+        const matchAuthor = normalizeText(book.author).includes(normQuery);
+        const matchIsbn = book.isbn.includes(normQuery);
+
+        return matchTitle || matchAuthor || matchIsbn;
+      });
+
+      // Actualizar contador
+      countEl.textContent = `Mostrando ${filtered.length} de ${CATALOG.length} volúmenes`;
+
+      // Limpiar rail mediante DOM seguro
+      rail.innerHTML = '';
+
+      if (filtered.length === 0) {
+        rail.style.display = 'none';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      rail.style.display = 'flex';
+      emptyState.classList.add('hidden');
+
+      // Crear lomos mediante elementos DOM seguros
+      filtered.forEach((book, index) => {
+        const spine = document.createElement('div');
+        const catClass = `spine-${book.category.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')}`;
+        
+        spine.className = `book-spine ${catClass}`;
+        spine.style.width = `${book.width}px`;
+        spine.style.height = `${book.height}px`;
+        spine.tabIndex = 0;
+        spine.setAttribute('role', 'button');
+        spine.setAttribute('aria-label', `Volumen: ${book.title}, por ${book.author}. Estante ${book.category}. Pulsa para abrir ficha catalográfica.`);
+
+        // Nervios superiores
+        const ribTop = document.createElement('div');
+        ribTop.className = 'spine-ribs-top';
+        spine.appendChild(ribTop);
+
+        // Contenedor de título
+        const titleWrap = document.createElement('div');
+        titleWrap.className = 'spine-title-wrap';
+
+        const titleSpan = document.createElement('span');
+        titleSpan.className = 'spine-title';
+        titleSpan.textContent = book.title;
+        titleWrap.appendChild(titleSpan);
+        spine.appendChild(titleWrap);
+
+        // Nervios inferiores
+        const ribBottom = document.createElement('div');
+        ribBottom.className = 'spine-ribs-bottom';
+        spine.appendChild(ribBottom);
+
+        // Tejuelo catalográfico
+        const tag = document.createElement('div');
+        tag.className = 'spine-tag';
+        tag.textContent = `${book.category.substring(0, 3).toUpperCase()}.${index + 1}`;
+        spine.appendChild(tag);
+
+        // Eventos de selección
+        spine.addEventListener('click', () => openModal(book));
+        spine.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openModal(book);
+          }
+        });
+
+        rail.appendChild(spine);
+      });
+    }
+
+    // Filtrar por categoría
+    function filterByCategory(category) {
+      currentCategory = category;
+
+      // Actualizar clases activas en botones
+      document.querySelectorAll('.cat-pill').forEach(btn => {
+        if (btn.getAttribute('data-cat') === category) {
+          btn.className = 'cat-pill active text-xs font-mono px-3 py-1.5 rounded bg-[var(--brass)] text-[#171106] font-bold transition';
+        } else {
+          btn.className = 'cat-pill text-xs font-mono px-3 py-1.5 rounded bg-[#181a22] text-[var(--text-muted)] hover:text-white border border-[#2a2318] transition';
+        }
+      });
+
+      renderBookshelf();
+    }
+
+    // Restablecer filtros
+    function resetFilters() {
+      searchQuery = '';
+      currentCategory = 'all';
+      document.getElementById('searchInput').value = '';
+      filterByCategory('all');
+    }
+
+    // Escuchar búsqueda en tiempo real
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      searchQuery = e.target.value;
+      renderBookshelf();
+    });
+
+    // Modal de Ficha Catalográfica
+    let previouslyFocusedElement = null;
+
+    function openModal(book) {
+      previouslyFocusedElement = document.activeElement;
+
+      document.getElementById('modalTitle').textContent = book.title;
+      document.getElementById('modalAuthor').textContent = book.author;
+      document.getElementById('modalCategory').textContent = `Estante Temático · ${book.category}`;
+      document.getElementById('modalIsbn').textContent = book.isbn;
+      document.getElementById('modalDescription').textContent = book.desc;
+
+      const modal = document.getElementById('bookModal');
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+
+      // Poner foco en el botón de cierre para accesibilidad
+      const closeBtn = modal.querySelector('button');
+      if (closeBtn) closeBtn.focus();
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('bookModal');
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+
+      if (previouslyFocusedElement) {
+        previouslyFocusedElement.focus();
+      }
+    }
+
+    // Cerrar modal con tecla Escape o clic fuera
+    document.getElementById('bookModal').addEventListener('click', (e) => {
+      if (e.target.id === 'bookModal') {
+        closeModal();
+      }
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const modal = document.getElementById('bookModal');
+        if (modal.classList.contains('active')) {
+          closeModal();
+        }
+      }
+    });
+
+    // Inicializar al cargar
+    document.addEventListener('DOMContentLoaded', () => {
+      renderBookshelf();
+    });
+  </script>
 
 </body>
 </html>
